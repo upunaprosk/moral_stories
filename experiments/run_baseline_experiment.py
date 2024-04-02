@@ -31,7 +31,7 @@ from transformers import (RobertaConfig,
                           T5Tokenizer,
                           AdamW,
                           get_linear_schedule_with_warmup)
-
+from transformers import AutoConfig, AutoModelForSequenceClassification,AutoTokenizer
 from utils import (compute_cls_metrics, compute_gen_metrics,
                    convert_examples_to_features, MoralStoriesProcessor, SocialChemProcessor,
                    set_seed, _rotate_checkpoints, get_token_loss)
