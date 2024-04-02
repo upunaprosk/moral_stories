@@ -1,3 +1,56 @@
+## Example usage in Colab
+
+```
+!git clone https://github.com/demelin/moral_stories.git
+%cd moral_stories
+!while read requirement; do pip install "$requirement" || echo "Skipping $requirement"; done < requirements.txt
+```
+Data Processing: 
+
+```
+!wget -O moral_stories_datasets.tar.xz "https://drive.google.com/uc?id=1qze2jHi0Ed5dY7Cse55E34wVzeSGTvQs&export=download"
+!tar xf moral_stories_datasets.tar.xz
+!mv -v moral_stories_datasets data
+%cd data
+!for i in $(ls -d classification/*); do echo $i; ln -s $i "`basename ${i}`_cls"; done
+!for i in $(ls -d generation/*); do echo $i; ln -s $i "`basename ${i}`_gen"; done
+%cd ..
+```
+
+Test for generation:
+
+```
+!python3 ./experiments/run_baseline_experiment.py \
+--model_type bart \
+--model_name_or_path facebook/bart-large \
+--task_name action\|context_gen \
+--split_name norm_distance \
+--do_eval \
+--do_prediction \
+--do_lower_case \
+--do_sample \
+--data_dir ./data \
+--max_seq_length 100 \
+--per_gpu_eval_batch_size 16 \
+--per_gpu_train_batch_size 16 \
+--learning_rate 5e-6 \
+--gradient_accumulation_steps 8 \
+--num_train_epochs 1 \
+--output_dir ./output \
+--do_train \
+--logging_steps 500 \
+--save_steps 500 \
+--seed 42 \
+--data_cache_dir ./cache \
+--warmup_pct 0.1 \
+--evaluate_during_training \
+--max_gen_length 60 \
+--p 0.9 \
+--save_total_limit 10 \
+--patience 10 \
+--overwrite_output_dir
+```
+
 ## Supplementary materials for the paper "*Moral Stories*: Situated Reasoning about Norms, Intents, Actions, and their Consequences" (Emelin et al., 2021)
 
 <p align="center">
